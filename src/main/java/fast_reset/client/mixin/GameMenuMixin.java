@@ -3,9 +3,11 @@ package fast_reset.client.mixin;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import fast_reset.client.Client;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.screen.*;
 import net.minecraft.client.gui.widget.*;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
@@ -18,20 +20,21 @@ public abstract class GameMenuMixin extends Screen {
         super(title);
     }
 
-    @Shadow
-    protected abstract void disconnect();
-
     @Unique
     private static final int bottomRightWidth = 102;
 
     @Shadow
     private @Nullable ButtonWidget exitButton;
 
+    @Shadow
+    public static void disconnect(MinecraftClient client, Text disconnectReason) {
+    }
+
     @Redirect(method = "initWidgets", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/GridWidget$Adder;add(Lnet/minecraft/client/gui/widget/Widget;I)Lnet/minecraft/client/gui/widget/Widget;"))
     private <T extends Widget> T addButtons(GridWidget.Adder instance, T widget, int occupiedColumns, @Share("saveButton") LocalRef<ButtonWidget.Builder> saveButtonStore, @Share("quitButton") LocalRef<T> quitButton) {
         final ButtonWidget.Builder saveButton = ButtonWidget.builder(Text.translatable("menu.quitWorld"), (buttonWidgetX) -> {
             Client.saveOnQuit = false;
-            this.disconnect();
+            disconnect(this.client, ClientWorld.QUITTING_MULTIPLAYER_TEXT);
             Client.saveOnQuit = true;
         });
         if (Client.buttonLocation == 2) {

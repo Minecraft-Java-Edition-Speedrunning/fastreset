@@ -1,5 +1,6 @@
 package fast_reset.client.client;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -11,11 +12,11 @@ public class SaveWorldScreen extends Screen {
         super(Text.translatable("menu.savingLevel"));
     }
 
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta){
-        renderBackground(matrices);
+    public void render(DrawContext ctx, int mouseX, int mouseY, float delta){
+        renderBackground(ctx, mouseX, mouseY, delta);
 
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(ctx, mouseX, mouseY, delta);
 
-        drawCenteredTextWithShadow(matrices, this.textRenderer, "still saving the last world", this.width / 2, 70, Color.white.getRGB());
+        ctx.drawCenteredTextWithShadow(this.textRenderer, "still saving the last world", this.width / 2, 70, Color.white.getRGB());
     }
 }
