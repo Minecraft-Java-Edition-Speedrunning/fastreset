@@ -13,7 +13,6 @@ import net.minecraft.text.TranslatableText;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameMenuScreen.class)
@@ -21,18 +20,6 @@ public class GameMenuMixin extends Screen {
 
     protected GameMenuMixin(Text title) {
         super(title);
-    }
-
-    private static final int bottomRightWidth = 102;
-
-    // kill save on the shutdown
-    @Redirect(method = "initWidgets", at = @At(value = "NEW", target = "(IIIILnet/minecraft/text/Text;Lnet/minecraft/client/gui/widget/ButtonWidget$PressAction;)Lnet/minecraft/client/gui/widget/ButtonWidget;", ordinal=7))
-    private ButtonWidget createExitButton(int defaultX, int defaultY, int defaultWidth, int height, Text message, ButtonWidget.PressAction onPress){
-        int x = Client.buttonLocation == 2 ? (int) (this.width - (bottomRightWidth * 1.5) - 4) : defaultX;
-        int y = Client.buttonLocation == 2 ? this.height - 24 : defaultY;
-        int width = Client.buttonLocation == 2 ? (int) (bottomRightWidth * 1.5) : defaultWidth;
-
-        return new ButtonWidget(x, y, width, height, message, onPress);
     }
 
     @Inject(method = "initWidgets", at=@At(value ="TAIL"))
@@ -45,6 +32,7 @@ public class GameMenuMixin extends Screen {
         switch(Client.buttonLocation){
             // bottom right build
             case 0:
+            default:
                 width = 102;
                 x = this.width - width - 4;
                 y = this.height - height - 4;
@@ -54,12 +42,6 @@ public class GameMenuMixin extends Screen {
                 width = 204;
                 x = this.width / 2 - width/2;
                 y = this.height / 4 + 148 - height;
-                break;
-            case 2:
-            default:
-                width = 204;
-                x = this.width / 2 - width/2;
-                y = this.height / 4 + 124 - height;
                 break;
         }
 
