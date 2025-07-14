@@ -20,12 +20,10 @@ public class OptionsScreenMixin extends Screen {
     private static Text getButtonText(){
         switch(Client.buttonLocation){
             case 0:
+            default:
                 return Text.literal("bottom right");
             case 1:
                 return Text.literal("center");
-            case 2:
-            default:
-                return Text.literal("replace s&q");
         }
     }
 

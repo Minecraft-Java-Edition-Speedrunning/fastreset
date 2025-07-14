@@ -16,7 +16,7 @@ public class Client implements ModInitializer {
 
     public static void updateButtonLocation(){
         buttonLocation++;
-        if(buttonLocation > 2){
+        if(buttonLocation > 1){
             buttonLocation = 0;
         }
 
@@ -57,6 +57,7 @@ public class Client implements ModInitializer {
             BufferedReader reader = new BufferedReader(new FileReader(configurationFile));
             String line = reader.readLine();
             buttonLocation = Integer.parseInt(line);
+            buttonLocation  = Math.max(0, Math.min(1, buttonLocation));
         } catch (IOException | NumberFormatException e) {
             buttonLocation = 0;
         }
