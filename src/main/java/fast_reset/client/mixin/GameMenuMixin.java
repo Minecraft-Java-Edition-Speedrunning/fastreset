@@ -17,10 +17,6 @@ public abstract class GameMenuMixin extends Screen {
         super(title);
     }
 
-    @Shadow
-    public static void disconnect(MinecraftClient client, Text disconnectReason) {
-    }
-
     @Inject(method = "initWidgets", at = @At("TAIL"))
     private <T extends Element & Drawable & Selectable> void addFastResetWidget(CallbackInfo ci) {
         int height = 20;
@@ -44,7 +40,7 @@ public abstract class GameMenuMixin extends Screen {
 
         this.addDrawableChild(ButtonWidget.builder(Text.translatable("menu.quitWorld"), (buttonWidgetX) -> {
             Client.saveOnQuit = false;
-            disconnect(this.client, ClientWorld.QUITTING_MULTIPLAYER_TEXT);
+            this.client.disconnect(ClientWorld.QUITTING_MULTIPLAYER_TEXT);
             Client.saveOnQuit = true;
         }).dimensions(x, y, width, height).build());
     }
